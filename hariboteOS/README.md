@@ -1,5 +1,6 @@
 ## 進める上で参考になった本、サイトなど
 - [『30日でできる！OS自作入門』を macOS Catalina で実行する](https://qiita.com/noanoa07/items/8828c37c2e286522c7ee)
+- [2進数、8進数、10進数、16進数相互変換ツール](https://hogehoge.tk/tool/number.html)
 
 ## 全体の流れ
 Chapter1 ~ 7  
@@ -20,6 +21,10 @@ Chapter29 ~ 30
 ## 読書メモ
 ### Chapter1章(PCの仕組みからアセンブラ入門まで)
 - バイナリエディタを使う
+- CPUが理解できるのは0,1の電気信号のみ
+- アセンブル
+    - 命令[DB]=data byteの略。1バイトだけ直接書く命令。
+    - 命令[RESB]=reserve byteの略。指定バイト分の確保をする命令。
 ### 2章()
 - 
 ### 3章()
