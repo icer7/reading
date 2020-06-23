@@ -29,8 +29,13 @@
     - HTML
 - ハイパーメディア
     - ユーザーが自分でリンクを選択して情報を取得するメディア
-### 2章()
-- 
+### 2章(Webの歴史)
+- Webはインターネットを使ったハイパーメディア
+- 初期のWebではHTMLが唯一のハイパーメディアフォーマット
+    - HTMLやAtomはXMLをベースにした構造化文書のためのマークアップ言語
+    - データを記述するデータフォーマットはJSON
+- RESTとはWeb APIが提供するリソースをHTTPやURIで簡単に操作するスタイル
+    - RESTはRepresentational State Transfer。「リソースの状態」(Resource State)の「表現」(Representation)
 ### 3章()
 - 
 ### 4章()
