@@ -38,8 +38,14 @@ Chapter29 ~ 30
     - 命令[CMP]=compare。比較命令。if文。CMP AL,0というのはif (AL == 0)。
     - BIOS=basic input output systemの略。基本的な入出力に関するシステム。
     - 命令[HLT]=halt。停止命令。CPUを無意味に空回ししないように。SQLconの終了版。
-### 3章()
-- 
+### Chapter3章(32ビットモード突入とC言語導入)
+- アセンブル
+    - 命令[JC]=jump if carryの略。キャリーフラグが1だったらジャンプしなさい命令。
+    - 命令[JNC]=jump if not carryの略。キャリーフラグが0だったらジャンプしなさい命令。
+    - 命令[JAE]=jump if above or equalの略。大きいか等しければジャンプしなさい命令。
+    - 命令[JBE]=jump if below or equalの略。小さいか等しければジャンプしなさい命令。
+    - 命令[JB]=jump if belowの略。小さければジャンプしなさい命令。
+    - 命令[EQU]=equalの略。
 ### 4章()
 - 
 ### 5章()
