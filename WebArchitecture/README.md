@@ -48,8 +48,22 @@
     - 階層化システム
     - コードオンデマンド
 - RESTの制約に従っていてRESTらしいことをRESTful
-### 4章()
-- 
+### 4章(URIの仕様)
+- URIはUniform Resource Identifierの略。統一リソース識別子。つまりURIはリソースを統一的に識別するID
+- URIを構成するパーツは(http://blog.example.jp/entries/1)
+    - URIスキーム: http
+    - ホスト名: blog.example.jp
+    - パス: /entries/1
+- 例2:http://yohei:pass@blog.example.jp:8000/search?q=test&debug=true#n10
+    - URIスキーム: http
+    - ユーザー情報: yohei:pass
+    - ホスト名: blog.example.jp
+    - ポート番号: 8000
+    - パス: /search
+    - クエリパラメータ: q=test&debug=true
+    - URIフラグメント: #n10
+- Web APIを実装する際はなるべく絶対URIで実装
+- URIにASCII文字以外を入れる場合、文字エンコーディングとしてUTF-8がいい
 ### 5章()
 - 
 ### 6章()
