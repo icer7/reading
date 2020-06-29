@@ -8,3 +8,6 @@
 
 ### WebArchitecture
 このディレクトリは「[Webを支える技術](https://www.amazon.co.jp/Web%E3%82%92%E6%94%AF%E3%81%88%E3%82%8B%E6%8A%80%E8%A1%93-HTTP%E3%80%81URI%E3%80%81HTML%E3%80%81%E3%81%9D%E3%81%97%E3%81%A6REST-WEB-PRESS-plus/dp/4774142042)」という本を進めたときのログです。
+
+### TcpIp
+このディレクトリは「[マスタリングTCP/IP 入門編](https://www.amazon.co.jp/%E3%83%9E%E3%82%B9%E3%82%BF%E3%83%AA%E3%83%B3%E3%82%B0TCP-IP-%E5%85%A5%E9%96%80%E7%B7%A8-%E7%AC%AC5%E7%89%88-%E7%AB%B9%E4%B8%8B/dp/4274068765)」という本を進めたときのログです。
