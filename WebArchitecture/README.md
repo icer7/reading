@@ -114,7 +114,13 @@
     - Cache-Control: 詳細なキャッシュ方法を指定する
 ### 10章(HTML)
 - HTMLの構文について
-### 11章()
-- 
+### 11章(microformats)
+- HTMLの中で更に意味のあるデータを表現するための技術
+- HTMLそのもにメタデータを埋め込む技術
+- 大きく２つに分類
+    - elemental(単純) microformats
+        - リンク関係(<a>要素や<link>要素のrel属性)を使ってメタデータを表現する
+    - compound(複合) microformats
+        - 主にclass属性を使って階層構造のあるメタデータを表現する
 ### 12章()
 - 
