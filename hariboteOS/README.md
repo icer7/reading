@@ -96,4 +96,7 @@ C言語の```p = (char *) i;```と```*p = i & 0x0f;```
 - 
 ### Chapter17章(コンソール)
 - 文字入力が出来るだけでなにも実行はされない
+### Chapter18章(dirコマンド)
+- linuxでいうlsコマンドのこと、windowsではdir
+- linuxでいうclearは、windowsではcls(clear screen)
 ### Chapter00章()
