@@ -99,4 +99,7 @@ C言語の```p = (char *) i;```と```*p = i & 0x0f;```
 ### Chapter18章(dirコマンド)
 - linuxでいうlsコマンドのこと、windowsではdir
 - linuxでいうclearは、windowsではcls(clear screen)
+### Chapter19章(アプリケーション)
+- linuxでいうcatは、windowsではtype
+- タブというのは、もともとは文字の表示位置を揃えるときに使うもの。「タブが来たらスペースを4個表示する」のではなく次のタブ位置までスペースを埋め尽くすのが本来のタブの意味
 ### Chapter00章()
