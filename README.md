@@ -11,6 +11,3 @@
 
 ### TcpIp
 このディレクトリは「[マスタリングTCP/IP 入門編](https://www.amazon.co.jp/%E3%83%9E%E3%82%B9%E3%82%BF%E3%83%AA%E3%83%B3%E3%82%B0TCP-IP-%E5%85%A5%E9%96%80%E7%B7%A8-%E7%AC%AC5%E7%89%88-%E7%AB%B9%E4%B8%8B/dp/4274068765)」という本を進めたときのログです。
-
-### ServerInfrastructureEngineer
-このディレクトリは「[サーバ/インフラエンジニア](https://booklive.jp/product/index/title_id/395506/vol_no/001)」という本を進めたときのログです。
