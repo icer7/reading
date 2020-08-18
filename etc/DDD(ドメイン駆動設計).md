@@ -354,6 +354,203 @@ https://codezine.jp/article/detail/11968
 - ドメインのルールはドメインオブジェクトに記述し、アプリケーションサービスはそのドメインオブジェクトを利用するだけ
 - 自身のふるまいを変化させる目的で状態を保持しない
 
+### ファクトリ
+- オブジェクト指向プログラミングにおけるクラスは道具みたいなもの
+- 複雑なオブジェクトの生成処理をオブジェクトとして定義するオブジェクト
+- 道具を作る工場になぞらえて「ファクトリ」という
+- オブジェクトの生成に関わる知識がまとめられたオブジェクト
+
+### アプリケーションを組み立てるフロー
+1. どういった機能が必要か、要求にしたがって考える
+2. 必要な機能が定まったら、今度はその機能を成り立たせるために必要となるユースケースを洗い出す
+3. ユースケースが定まったら、必要なる概念とそこに存在するルールからアプリケーションが必要とする知識を選び出し、ドメインオブジェクトを準備する
+4. ドメインオブジェクトを用いてユースケースを実現するアプリケーションサービスを実装する
+
+- サークル機能を例とする
+    1. サークル機能
+    2. 「サークルの作成」と「サークルへの参加」これら2つのユースケース
+    3. サークルはライフサイクルがあるオブジェクトなのでエンティティであり、ライフサイクルを表現するためには識別子が必要なので、識別子は値オブジェクトとして実装する
+
+            // サークルの識別子となる値オブジェクト
+            public class CircleId
+            {
+                public CircleId(string value)
+                {
+                    if (value == null) throw new ArgumentNullException(nameof(value));
+
+                    Value = value;
+                }
+
+                public string Value { get; }
+            }
+
+        またサークルには名前を付けることができるので、サークルの名前を表す値オブジェクトも用意する
+
+            public class CircleName : IEquatable<CircleName>
+            {
+                public CircleName(string value)
+                {
+                    if (value == null) throw new ArgumentNullException(nameof(value));
+                    if (value.length < 3) throw new ArgumentException("サークル名は3文字以上です", nameof(value));
+                    if (value.length > 20) throw new ArgumentException("サークル名は20文字以下です", nameof(value));
+
+                    Value = value;
+                }
+
+                public string Value { get; }
+
+                public bool Equals(CircleName other)
+                {
+                    if (ReferenceEquals(null, other)) return false;
+                    if (ReferenceEquals(this, other)) return true;
+
+                    return string.Equals(Value, other.value);
+                }
+
+                public override bool Equals(object obj)
+                {
+                    if (ReferenceEquals(null, other)) return false;
+                    if (ReferenceEquals(this, other)) return true;
+                    if (obj.GetType() != this.GetType()) return false;
+
+                    return Equals((CircleName) obj);
+                }
+
+                public override int GetHashCode()
+                {
+                    return (Value != null ? Value.GetHashCode() : 0);
+                }
+            }
+
+        サークルを表すエンティティ
+
+            public class Circle
+            {
+                public Circle(CircleId id, CircleName name, User owner, List<User> members)
+                {
+                    if (id == null) throw new ArgumentNullException(nameof(id));
+                    if (name == null) throw new ArgumentNullException(nameof(name));
+                    if (owner == null) throw new ArgumentNullException(nameof(owner));
+                    if (members == null) throw new ArgumentNullException(nameof(members));
+
+                    Id = id;
+                    Name = name;
+                    Owner = owner;
+                    Members = members;
+                }
+
+                public CircleId Id { get; }
+                public CircleName Name { get; private set; }
+                public User Owner { get; private set; }
+                public List<User> Members { get; private set; }
+            }
+        サークルにはサークルのオーナーになるユーザーを表すOwnerと  
+        所属しているユーザーの一覧を表すMembersが定義されている
+
+        次にサークルの永続化を行うためにサークルのリポジトリを作成
+
+            public interface ICircleRepository
+            {
+                void Save(Circle circle);
+                Circle Find(CircleId id);
+                Circle Find(CircleName name);
+            }
+
+        サークルを生成するファクトリも準備する
+
+            public interface ICircleFactory
+            {
+                Circle Create(CircleName name, User owner);
+            }
+
+        またサークルはユーザー名が重複していないか確認する必要がある  
+        重複に関するふるまいをCircleクラスで定義すると不自然なのでドメインサービスで定義する
+
+            public class CircleService
+            {
+                private readonly ICircleRepository circleRepository;
+
+                public CircleService(ICircleRepository circleRepository)
+                {
+                    this.circleRepository = circleRepository;
+                }
+
+                public bool Exists(Circle circle)
+                {
+                    var duplicated = circleRepository.Find(circle.Name);
+                    return duplicated != null;
+                }
+            }
+        ここまでで値オブジェクトからドメインサービスまでひととおりのオブジェクトの用意が終わり、これからユースケースを実現していく
+
+        最初はサークルを作成する処理を実装する
+
+            // サークルの作成処理のコマンドオブジェクト
+            public class CircleCreateCommand
+            {
+                public CircleCreateCommand(string userId, string name)
+                {
+                    UserId = userId;
+                    Name = name;
+                }
+
+                public string UserId { get; }
+                public string Name { get; }
+            }
+        クライアントではこのコマンドオブジェクトを使って  
+        サークルを作成するユーザー（サークルのオーナー）のIDと作成しようとしているサークルの名前を指定する
+
+        実際に処理を行うサークル作成処理はアプリケーションサービスで実装する
+
+            public class CircleApplicationService
+            {
+                private readonly ICircleFactory circleFactory;
+                private readonly ICircleRepository circleRepository;
+                private readonly CircleService circleService;
+                private readonly IUserRepository userRepository;
+
+                public CircleApplicationService(
+                    ICircleFactory circleFactory;
+                    ICircleRepository circleRepository;
+                    CircleService circleService;
+                    IUserRepository userRepository;
+                )
+                {
+                    this.ICircleFactory = circleFactory;
+                    this.ICircleRepository = circleRepository;
+                    this.CircleService = circleService;
+                    this.IUserRepository = userRepository;
+                }
+
+                public void Create(CircleCreateCommand command)
+                {
+                    using (var transaction = new TransactionScope())
+                    {
+                        var ownerId = new UserId(command.UserId);
+                        vat owner = userRepository.Find(ownerId);
+                        if (owner == null)
+                        {
+                            throw new UserNotFoundException(ownerId, "サークルのオーナーとなるユーザーが見つかりませんでした");
+                        }
+
+                        var name = new CircleName(command.Name);
+                        var circle = circleFactory.Create(name, owner);
+                        if (circleService.Exists(circle))
+                        {
+                            throw new CanNotRegisterCircleException(circle, "サークルはすでに存在しています");
+                        }
+
+                        circleRepository.Save(circle);
+
+                        transaction.Complete();
+                    }
+                }
+            }
+    - 処理の流れ
+        1. サークルを作成するためにまず最初にサークルのオーナーとなるユーザーを検索
+        2. ユーザーの存在を確認できたらサークルを生成し、重複確認を行う
+        3. 重複しないことの確認を取れたらリポジトリに永続化を依頼して処理完了
+
 ### 依存について
 - テーマページを例にすると
     - MediaThemeClient.phpはMediaTheme.phpを継承している
