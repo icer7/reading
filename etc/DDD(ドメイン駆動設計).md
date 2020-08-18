@@ -315,6 +315,52 @@ https://codezine.jp/article/detail/11968
                 }
             }
 
+### アプリケーションサービス
+- ドメインサービスとアプリケーションサービスは対象となる領域が異なるだけ、、まずはサービスがあり、それの向いている方向がドメインなのかアプリケーションなのかの違い
+- ユースケースを表現するオブジェクト
+- たとえばユーザー登録の必要なシステムにおいて、ユーザー機能を実現するには「ユーザーを登録する」ユースケースや「ユーザー情報を変更する」ユースケースが必要
+- CRUD処理もユースケース
+
+        // ユーザー登録処理をアプリケーションサービスのふるまいとして実装
+        public class UserApplicationService
+        {
+            private readonly IUserRepository userRepository;
+            private readonly UserService userService;
+
+            public UserApplicationService(IUserRepository userRepository, UserService userService)
+            {
+                this.userRepository = userRepository;
+                this.userService = userService;
+            }
+
+            public void Register(string name)
+            {
+                vat user = new User(
+                    new UserName(name)
+                );
+                if (userService.Exists(user))
+                {
+                    throw new CanNotRegisterUserException(user, "ユーザーは既に存在しています");
+                }
+
+                userRepository.Save(user);
+            }
+        }
+    - Registerメソッドでは最初にUserオブジェクトを生成
+    - 重複チェックをドメインサービスであるUserServiceに依頼
+    - その結果としてユーザーが重複していないことを確認できた場合に、IUserRepositoryにインスタンスの永続化を依頼することでユーザーの登録を行っている
+- アプリケーションサービスはあくまでもドメインオブジェクトのタスク調整に徹する
+- アプリケーションサービスにはドメインのルールは記述しない
+- ドメインのルールはドメインオブジェクトに記述し、アプリケーションサービスはそのドメインオブジェクトを利用するだけ
+- 自身のふるまいを変化させる目的で状態を保持しない
+
+### 依存について
+- テーマページを例にすると
+    - MediaThemeClient.phpはMediaTheme.phpを継承している
+    - つまり、MediaThemeClient.phpはMediaTheme.phpに依存している
+    - 依存は依存する側のモジュールから依存される側のモジュールへと矢印を伸ばして表現する
+        - MediaThemeClient.php -> MediaTheme.php
+
 ### その他のキーワード
 - コンストラクタ
     - オブジェクト指向のプログラミング言語で新たなオブジェクトを生成する際に呼び出されて内容の初期化などを行なう関数あるいはメソッドのこと
