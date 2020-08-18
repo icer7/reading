@@ -242,7 +242,78 @@ https://codezine.jp/article/detail/11968
 
 ### リポジトリ
 - ソフトウェア開発の文脈のリポジトリはデータの保管庫を表す
-- 
+- データを永続化（保存）し、再構築（復元）するといった処理を抽象的に扱うためのオブジェクト
+- オブジェクトのインスタンスを保存したいときは直接的にデータストアに書き込みを行う処理を行うのではなく、リポジトリにインスタンスの永続化を依頼する
+- また永続化したデータからインスタンスを再構築したいときにもリポジトリにデータの再構築を依頼する
+- データの永続化と再構築を直接行うのではなく、リポジトリを経由して行うことでソフトウェアに柔軟性をもたらす
+- ユーザー作成処理を例にしてリポジトリを利用した実装
+
+        class Program
+        {
+            private IUserRepository userRepository;
+
+            public Program(IUserRepository userRepository)
+            {
+                this.userRepository = userRepository;
+            }
+
+            public void CreateUser(string userName)
+            {
+                var user = new User(
+                    new UserName(userName)
+                );
+
+                var userService = new UserService(userRepository);
+                if (userService.Exists(user))
+                {
+                    throw new Exception($"{userName}は既に存在しています");
+                }
+
+                userRepository.Save(user);
+            }
+        }
+    - Userオブジェクトの永続化はリポジトリであるIUserRepositoryオブジェクトに対して依頼されるようになる
+    - データストアに対する命令を抽象的に行うことで、ややこしい処理から開放される
+- ドメインサービスに適用すると
+
+        class UserService
+        {
+            private IUserRepository userRepository
+
+            public UserService(IUserRepository userRepository)
+            {
+                this.userRepository = userRepository;
+            }
+
+            public bool Exists(User user)
+            {
+                var found = userRepository.Find(user.Name);
+
+                return found != null;
+            }
+        }
+- リポジトリを定義してみる
+
+        public interface IUserRepository
+        {
+            void Save(User user);
+            User Find(userName name);
+            bool Exists(User user);
+        }
+    - こちらの定義を用いるとドメインサービスが↓のように書きかえることができる
+
+            class UserService
+            {
+                private IUserRepository userRepository
+
+                (...略...)
+
+                public bool Exists(User user)
+                {
+                    // ユーザー名により重複確認を行うという知識は失われている
+                    return userRepository.Exists(user);
+                }
+            }
 
 ### その他のキーワード
 - コンストラクタ
