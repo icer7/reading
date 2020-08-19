@@ -1,5 +1,6 @@
 # ドメイン駆動設計（DDD）とは
-https://codezine.jp/article/detail/11968
+- [ドメイン駆動設計入門](https://codezine.jp/article/detail/11968)
+- [PythonでボトムアップDDD](https://qiita.com/kotamatsuoka/items/832ffe97e2a1c19141b4)
 - ドメインの知識に焦点をあてた設計手法
 - ドメイン駆動設計はいわば当たり前を当たり前に実践するための開発手法
 - DDDでよく使われるアーキテクチャ
@@ -53,23 +54,23 @@ https://codezine.jp/article/detail/11968
     - 交換が可能である
     - 等価性によって比較される
 
-    class FullName
-    {
-        public FullName(string firstName, string lastName)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-        }
+            class FullName
+            {
+                public FullName(string firstName, string lastName)
+                {
+                    FirstName = firstName;
+                    LastName = lastName;
+                }
 
-        public string FirstName { get; }
-        public string LastName { get; }
-    }
+                public string FirstName { get; }
+                public string LastName { get; }
+            }
 
-    var fullName = new FullName("ryo", "sato");
-    Console.WriteLine(fullName.LastName); // satoが表示される
+            var fullName = new FullName("ryo", "sato");
+            Console.WriteLine(fullName.LastName); // satoが表示される
 
-    var fullName = new FullName("john", "smith");
-    Console.WriteLine(fullName.LastName); // smithが表示される
+            var fullName = new FullName("john", "smith");
+            Console.WriteLine(fullName.LastName); // smithが表示される
 
 - FullNameクラスはコンストラクタで第1引数に名、第2引数に性を指定するようになっている
 - FuLLNameは名前の通り氏名を表現したオブジェクトで、値の表現である
